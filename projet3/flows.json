@@ -1,0 +1,283 @@
+[
+    {
+        "id": "f0fbf1266171e605",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7cfa55ac333ab33d",
+        "type": "exec",
+        "z": "f0fbf1266171e605",
+        "command": "cat /sys/class/thermal/thermal_zone0/temp",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 630,
+        "y": 220,
+        "wires": [
+            [
+                "c74716c7b70518ea"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "cc958e0b9d1e42de",
+        "type": "inject",
+        "z": "f0fbf1266171e605",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 280,
+        "y": 220,
+        "wires": [
+            [
+                "7cfa55ac333ab33d"
+            ]
+        ]
+    },
+    {
+        "id": "8bae046b44ae91dc",
+        "type": "ui_gauge",
+        "z": "f0fbf1266171e605",
+        "name": "",
+        "group": "c6313ee66fc50100",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Jauge",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "80",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1190,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "9a24e7aa51559c31",
+        "type": "debug",
+        "z": "f0fbf1266171e605",
+        "name": "Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "c74716c7b70518ea",
+        "type": "function",
+        "z": "f0fbf1266171e605",
+        "name": "Conversion et traitement",
+        "func": "msg.payload = Number(msg.payload)/1000;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 120,
+        "wires": [
+            [
+                "8bae046b44ae91dc"
+            ]
+        ]
+    },
+    {
+        "id": "0f9cae920da1e8fb",
+        "type": "http request",
+        "z": "f0fbf1266171e605",
+        "name": "weather",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "api.openweathermap.org/data/2.5/weather?q=paris&appid=c0870d10ada0a91d6e52e3a6fb4758a1",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 520,
+        "y": 380,
+        "wires": [
+            [
+                "d07ee724b7a77543"
+            ]
+        ]
+    },
+    {
+        "id": "c70f7dfa1999b241",
+        "type": "inject",
+        "z": "f0fbf1266171e605",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 520,
+        "wires": [
+            [
+                "0f9cae920da1e8fb"
+            ]
+        ]
+    },
+    {
+        "id": "cf07cdf4d145d9f5",
+        "type": "ui_chart",
+        "z": "f0fbf1266171e605",
+        "name": "",
+        "group": "ff84714f561c6093",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "auto",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "-10",
+        "ymax": "40",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "604800",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 880,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d07ee724b7a77543",
+        "type": "function",
+        "z": "f0fbf1266171e605",
+        "name": "",
+        "func": "msg.payload = msg.payload.main.temp - 272.15;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 640,
+        "wires": [
+            [
+                "cf07cdf4d145d9f5"
+            ]
+        ]
+    },
+    {
+        "id": "57631e77d107b546",
+        "type": "debug",
+        "z": "f0fbf1266171e605",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "c6313ee66fc50100",
+        "type": "ui_group",
+        "name": "temperature CPU",
+        "tab": "b219e75129d34e77",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ff84714f561c6093",
+        "type": "ui_group",
+        "name": "Météo",
+        "tab": "b219e75129d34e77",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b219e75129d34e77",
+        "type": "ui_tab",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]

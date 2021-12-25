@@ -90,7 +90,8 @@ pression atm
 
 #### Matrix
 
-envoyer des messages colores qui s'affichent sur la sense-hat :)
+envoyer des messages colores qui s'affichent sur la sense-hat :)  
+envoyer une image a la matrice en copiant le l'URL de l'image sur le web
 
 
 
